@@ -42,14 +42,37 @@
                 ]
             },
         },
-        "S3BucketOriginalPolicy": {
-            "Type": "AWS::S3::BucketPolicy",
+        "ExecRole": {
+            "Type": "AWS::IAM::Role",
             "Properties": {
-                "PolicyDocument": {
-                    "ID": "StadyImageUploaderPolicy",
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
+                "AssumeRolePolicyDocument": {
+                    "Version" : "2012-10-17",
+                    "Statement": [ {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [ "lambda.amazonaws.com" ]
+                        },
+                        "Action": [ "sts:AssumeRole" ]
+                    } ]
+                },
+                "Path": "/",
+                "Policies": [ {
+                    "PolicyName": "logs",
+                    "PolicyDocument": {
+                        "Version" : "2012-10-17",
+                        "Statement": [ {
+                            "Effect": "Allow",
+                            "Action": [
+                                "logs:*"
+                            ],
+                            "Resource": "arn:aws:logs:*:*:*"
+                        } ]
+                    }
+                }, {
+                    "PolicyName": "S3BucketOriginal",
+                    "PolicyDocument": {
+                        "Version" : "2012-10-17",
+                        "Statement": [ {
                             "Sid": "AddPerm",
                             "Effect": "Allow",
                             "Principal": "*",
@@ -68,27 +91,18 @@
                                     ]
                                 ]
                             }
-                        }
-                    ]
-                },
-                "Bucket": {
-                    "Ref": "S3BucketOriginal",
-                }
-            }
-        },
-        "S3BucketThumbnailPolicy": {
-            "Type": "AWS::S3::BucketPolicy",
-            "Properties": {
-                "PolicyDocument": {
-                    "ID": "StadyImageUploaderThumbnailPolicy",
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
+                        } ]
+                    }
+                }, {
+                    "PolicyName": "S3BucketOriginal",
+                    "PolicyDocument": {
+                        "Version" : "2012-10-17",
+                        "Statement": [ {
                             "Sid": "AddPerm",
                             "Effect": "Allow",
                             "Principal": "*",
                             "Action": [
-                                "s3:GetObject"
+                                "s3:PutObject"
                             ],
                             "Resource":{
                                 "Fn::Join": [
@@ -102,28 +116,9 @@
                                     ]
                                 ]
                             }
-                        }
-                    ]
-                },
-                "Bucket": {
-                    "Ref": "S3BucketThumbnail",
-                }
-            }
-        },
-        "ExecRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Version" : "2012-10-17",
-                    "Statement": [ {
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [ "lambda.amazonaws.com" ]
-                        },
-                        "Action": [ "sts:AssumeRole" ]
-                    } ]
-                },
-                "Path": "/",
+                        } ]
+                    }
+                } ]
             }
         }
     }
