@@ -1,0 +1,114 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "image uploader",
+    "Metadata": {
+        "S3BucketOriginal": {
+            "Description": "original images bucket."
+        },
+        "S3BucketThumbnail": {
+            "Description": "Thumbnail images bucket."
+        }
+    },
+    "Resources": {
+        "S3BucketOriginal": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "PublicRead",
+                "WebsiteConfiguration": {
+                    "IndexDocument": "index.html",
+                    "ErrorDocument": "error.html"
+                },
+                "Tags" : [
+                    {
+                        "Key" : "name",
+                        "Value" : "S3BucketOriginal",
+                    }
+                ]
+            },
+        },
+        "S3BucketThumbnail": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "PublicRead",
+                "WebsiteConfiguration": {
+                    "IndexDocument": "index.html",
+                    "ErrorDocument": "error.html"
+                },
+                "Tags" : [
+                    {
+                        "Key" : "name",
+                        "Value" : "S3BucketThumbnail",
+                    }
+                ]
+            },
+        },
+        "S3BucketOriginalPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+                "PolicyDocument": {
+                    "ID": "StadyImageUploaderPolicy",
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "AddPerm",
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": [
+                                "s3:GetObject"
+                            ],
+                            "Resource":{
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "arn:aws:s3:::",
+                                        {
+                                            "Ref": "S3BucketOriginal"
+                                        },
+                                        "/*"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Bucket": {
+                    "Ref": "S3BucketOriginal",
+                }
+            }
+        },
+        "S3BucketThumbnailPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+                "PolicyDocument": {
+                    "ID": "StadyImageUploaderThumbnailPolicy",
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "AddPerm",
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Action": [
+                                "s3:GetObject"
+                            ],
+                            "Resource":{
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "arn:aws:s3:::",
+                                        {
+                                            "Ref": "S3BucketThumbnail"
+                                        },
+                                        "/*"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Bucket": {
+                    "Ref": "S3BucketThumbnail",
+                }
+            }
+        }
+    }
+}
