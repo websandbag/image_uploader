@@ -1,11 +1,23 @@
 {
   "name": "lambda_handson_stady",
   "version": "1.0.0",
-  "description": "",
+  "description": "## 概要 lambdaを用いてサーバーレスで画像をアップロードする仕組みの作成",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/websandbag/image_uploader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/websandbag/image_uploader/issues"
+  },
+  "homepage": "https://github.com/websandbag/image_uploader#readme",
+  "dependencies": {
+    "async": "^2.6.0",
+    "gm": "^1.23.1"
+  }
 }
